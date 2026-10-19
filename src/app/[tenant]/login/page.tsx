@@ -20,6 +20,7 @@ export default async function LoginPage({ params, searchParams }: PageProps<"/[t
       tenantName={t.name}
       next={typeof sp.next === "string" ? sp.next : `/${slug}`}
       initialStep={wantsProfile ? "perfil" : "email"}
+      como={sp.como === "tienda" ? "tienda" : "clienta"}
     />
   );
 }

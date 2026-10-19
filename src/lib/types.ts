@@ -23,6 +23,8 @@ export type TenantSettings = {
   /** Dónde y cuándo se retiran los pedidos en tienda */
   pickup_info?: { address?: string; hours?: string; notes?: string };
   /** Datos del pie de los correos */
+  /** Tienda de pruebas/demostración: no se indexa ni sale en el sitemap */
+  demo?: boolean;
   social?: { instagram?: string; tiktok?: string; youtube?: string; facebook?: string };
   legal?: { nombre?: string; rut?: string; direccion?: string };
 };

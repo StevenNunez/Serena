@@ -36,7 +36,7 @@ export async function requireCustomer(slug: string, tenantId: string, next: stri
 // Acceso al panel: devuelve el rol o manda a la tienda
 export async function requireStaff(slug: string, tenantId: string, allowed: Role[]) {
   const v = await getViewer(tenantId);
-  if (!v.user) redirect(`/${slug}/login?next=${encodeURIComponent(`/${slug}/admin`)}`);
+  if (!v.user) redirect(`/${slug}/login?como=tienda&next=${encodeURIComponent(`/${slug}/admin`)}`);
   if (!v.role || !allowed.includes(v.role)) redirect(`/${slug}`);
   return { ...v, user: v.user, role: v.role };
 }

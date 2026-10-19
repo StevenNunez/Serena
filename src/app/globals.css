@@ -10,6 +10,7 @@
   --muted: #8a5a66;        /* texto secundario */
   --line: #f4c9d6;         /* bordes */
   --ok: #1f7a4d;
+  --cta: #d4466f;          /* rosa fuerte para el botón principal de la entrada (más suave que el carmín) */
 }
 
 @theme inline {
@@ -23,6 +24,7 @@
   --color-ok: var(--ok);
   --font-sans: var(--font-body);
   --font-display: var(--font-title);
+  --color-cta: var(--cta);
 }
 
 html {
@@ -52,4 +54,8 @@ body {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+.font-script {
+  font-family: var(--font-script), cursive;
 }

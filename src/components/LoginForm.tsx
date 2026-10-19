@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
@@ -12,6 +13,8 @@ type Props = {
   tenantName: string;
   next: string;
   initialStep: Step;
+  /** Quién entra: la clienta (por defecto) o la tienda (dueña, equipo), que va directo al panel */
+  como?: "clienta" | "tienda";
   initialName?: string;
   initialPhone?: string;
 };
@@ -22,7 +25,7 @@ const primary =
   "h-14 w-full rounded-full bg-brand text-lg font-bold text-paper active:scale-[0.98] disabled:opacity-60";
 
 export default function LoginForm({
-  slug, tenantId, tenantName, next, initialStep, initialName = "", initialPhone = "",
+  slug, tenantId, tenantName, next, initialStep, como = "clienta", initialName = "", initialPhone = "",
 }: Props) {
   const router = useRouter();
   const supabase = createClient();
@@ -56,6 +59,15 @@ export default function LoginForm({
       setBusy(false);
       return setError("Código incorrecto o vencido.");
     }
+    if (como === "tienda") {
+      const { data: miembro } = await supabase
+        .from("memberships").select("role").eq("tenant_id", tenantId).eq("user_id", data.user.id).maybeSingle();
+      setBusy(false);
+      if (!miembro) return setError(`Este correo no está en el equipo de ${tenantName}. Pide que te agreguen, o entra como clienta.`);
+      router.replace(next.startsWith(`/${slug}/admin`) ? next : `/${slug}/admin`);
+      router.refresh();
+      return;
+    }
     const { data: customer } = await supabase
       .from("customers").select("user_id").eq("tenant_id", tenantId).eq("user_id", data.user.id).maybeSingle();
     setBusy(false);
@@ -84,8 +96,18 @@ export default function LoginForm({
     <div className="px-6 pt-8">
       {step === "email" && (
         <form onSubmit={sendCode} className="space-y-4">
-          <h1 className="font-display text-3xl">Entra a {tenantName}</h1>
-          <p className="text-muted">Te enviamos un código a tu correo. Sin contraseñas.</p>
+          <nav aria-label="Tipo de acceso" className="grid grid-cols-2 gap-1 rounded-full bg-blush p-1 text-center text-sm font-bold">
+            <Link href={`/${slug}/login`} replace aria-current={como === "clienta" ? "page" : undefined}
+              className={`rounded-full py-2 ${como === "clienta" ? "bg-brand text-paper" : "text-ink"}`}>Soy clienta</Link>
+            <Link href={`/${slug}/login?como=tienda`} replace aria-current={como === "tienda" ? "page" : undefined}
+              className={`rounded-full py-2 ${como === "tienda" ? "bg-brand text-paper" : "text-ink"}`}>Soy de la tienda</Link>
+          </nav>
+          <h1 className="font-display text-3xl">{como === "tienda" ? `Panel de ${tenantName}` : `Entra a ${tenantName}`}</h1>
+          <p className="text-muted">
+            {como === "tienda"
+              ? "Entra con el correo con que te dieron de alta: administras piezas, pagos y el en vivo."
+              : "Te enviamos un código a tu correo. Sin contraseñas."}
+          </p>
           <label className="block text-sm font-semibold" htmlFor="email">Correo</label>
           <input id="email" type="email" required autoComplete="email" inputMode="email" value={email}
             onChange={(e) => setEmail(e.target.value)} className={field} placeholder="tu@correo.cl" />

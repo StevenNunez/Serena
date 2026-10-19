@@ -1,5 +1,5 @@
 // Siembra fotos de ejemplo (ilustraciones) en las piezas de la demo. Idempotente.
-// Uso:  node --env-file=.env.local scripts/seed-photos.mjs
+// Uso:  node --env-file=.env.local scripts/seed-photos.mjs [slug]   (por defecto "demo")
 // También sube la marca en blanco que usan los correos (carpeta brand/ del mismo bucket).
 // Usa `sharp` (ya instalado como dependencia de Next) para dibujar cada prenda y la sube al bucket "products".
 import sharp from "sharp";
@@ -71,7 +71,7 @@ function svg(n, title) {
   </svg>`;
 }
 
-const { data: tenant, error: te } = await db.from("tenants").select("id").eq("slug", "serena").single();
+const { data: tenant, error: te } = await db.from("tenants").select("id").eq("slug", process.argv[2] ?? "demo").single();
 if (te) throw new Error(`tenant: ${te.message}`);
 // Marca para correos: el wordmark en blanco (se ve sobre la cabecera oscura)
 {

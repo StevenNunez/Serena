@@ -99,7 +99,7 @@ function Steps({ kind }: { kind: Kind }) {
   );
 }
 
-const outline = "flex h-12 w-full items-center justify-center rounded-full border-2 border-brand px-6 text-base font-bold text-brand active:scale-[0.99]";
+const outline = "flex h-12 w-full items-center justify-center rounded-full border-2 border-cta px-6 text-base font-bold text-cta active:scale-[0.99]";
 
 /** Botón grande de la página de entrada */
 export function InstallHero() {

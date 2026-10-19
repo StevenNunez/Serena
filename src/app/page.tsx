@@ -69,37 +69,44 @@ export default async function Landing() {
     <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col bg-paper shadow-[0_0_0_1px_var(--line)]">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
 
-      <header className="bg-accent px-6 pb-8 pt-[calc(env(safe-area-inset-top)+1.5rem)] text-center">
+      <header className="relative overflow-hidden rounded-b-[2.75rem] bg-gradient-to-b from-accent via-[#fbb4c8] to-blush px-6 pb-12 pt-[calc(env(safe-area-inset-top)+1.75rem)] text-center">
         <Image
           src={t.theme.logo ?? "/brand/serena-wordmark.png"}
           alt={t.name}
           width={576}
           height={136}
           priority
-          className="mx-auto h-14 w-auto"
+          className="mx-auto h-20 w-auto"
         />
-        <h1 className="font-display mt-5 text-3xl leading-tight">Piezas únicas que solo existen una vez</h1>
-        <p className="mt-2 text-sm text-ink/80">
-          Ropa y accesorios elegidos uno a uno. Si te gusta una, toca «¡Es mía!» y es tuya.
+        <h1 className="mt-5">
+          <span className="font-script block text-2xl leading-none text-brand">Piezas únicas</span>
+          <span className="font-display mt-1 block text-lg leading-tight text-ink">que solo existen una vez</span>
+        </h1>
+        <p className="mx-auto mt-2 max-w-72 text-sm leading-snug text-ink/80">
+          Ropa y accesorios elegidos uno a uno. Si te gusta una, toca <strong>«¡Es mía!»</strong> y es tuya.
         </p>
+        <Link
+          href={`/${t.slug}`}
+          className="mx-auto mt-6 flex h-12 w-fit items-center justify-center rounded-full bg-cta px-9 text-base font-bold text-white shadow-[0_6px_16px_-6px_var(--cta)] active:scale-[0.98]"
+        >
+          Entrar a la tienda
+        </Link>
       </header>
 
-      <main className="flex-1 px-6 pb-10 pt-6">
+      <main className="flex-1 px-6 pb-10 pt-7">
         <div className="space-y-3">
-          <Link
-            href={`/${t.slug}`}
-            className="flex h-12 w-full items-center justify-center rounded-full bg-brand px-6 text-base font-bold text-paper active:scale-[0.99]"
-          >
-            Entrar a la tienda
-          </Link>
           <InstallHero />
+          <p className="pt-1 text-center text-xs text-muted">
+            ¿Administras la tienda?{" "}
+            <Link href={`/${t.slug}/login?como=tienda`} className="font-bold underline">Entra al panel</Link>
+          </p>
         </div>
 
         {nuevas.length > 0 ? (
           <section aria-labelledby="nuevas" className="mt-8">
             <div className="mb-3 flex items-baseline justify-between">
               <h2 id="nuevas" className="font-display text-2xl">Recién llegadas</h2>
-              <Link href={`/${t.slug}`} className="text-sm font-bold text-brand">Ver todo →</Link>
+              <Link href={`/${t.slug}`} className="text-sm font-bold text-cta">Ver todo →</Link>
             </div>
             <ul className="grid grid-cols-2 gap-x-3 gap-y-5">
               {nuevas.map((p) => (
@@ -116,7 +123,7 @@ export default async function Landing() {
           <ol className="mt-3 space-y-3">
             {PASOS.map(([n, titulo, texto]) => (
               <li key={n} className="flex gap-3 rounded-2xl bg-blush px-4 py-3">
-                <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-brand text-sm font-bold text-paper">{n}</span>
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-cta text-sm font-bold text-white">{n}</span>
                 <div>
                   <p className="font-bold">{titulo}</p>
                   <p className="text-sm text-muted">{texto}</p>

@@ -8,14 +8,16 @@ export const revalidate = 3600;
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const db = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
   const [{ data: tenants }, { data: products }] = await Promise.all([
-    db.from("tenants").select("id, slug"),
+    db.from("tenants").select("id, slug, settings"),
     db.from("products").select("tenant_id, number, created_at").in("status", ["available", "reserved"]),
   ]);
 
-  const slugOf = new Map((tenants ?? []).map((t) => [t.id, t.slug]));
+  // Las tiendas de demostración no se publican en buscadores
+  const reales = (tenants ?? []).filter((t) => !(t.settings as { demo?: boolean } | null)?.demo);
+  const slugOf = new Map(reales.map((t) => [t.id, t.slug]));
   return [
     { url: SITE_URL, changeFrequency: "daily" as const, priority: 1 },
-    ...(tenants ?? []).flatMap((t) => [
+    ...reales.flatMap((t) => [
       { url: `${SITE_URL}/${t.slug}`, changeFrequency: "daily" as const, priority: 0.9 },
       { url: `${SITE_URL}/${t.slug}/live`, changeFrequency: "weekly" as const, priority: 0.5 },
     ]),

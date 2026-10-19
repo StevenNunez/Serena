@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: LayoutProps<"/[tenant]">): Pr
     description: `${t.name}: ${t.theme.tagline ?? "tienda en línea"}. Piezas únicas: cada prenda existe una sola vez. Reserva con «¡Es mía!» y paga por transferencia.`,
     keywords: ["ropa", "moda", "piezas únicas", "blazers", "vestidos", "chaquetas", "Chile", t.name],
     alternates: { canonical: `/${t.slug}` },
-    robots: { index: true, follow: true },
+    robots: t.settings.demo ? { index: false, follow: false } : { index: true, follow: true },
     openGraph: { type: "website", locale: "es_CL", siteName: t.name, title: `${t.name} · ${t.theme.tagline ?? "Tienda"}`, url: `/${t.slug}` },
     twitter: { card: "summary_large_image" },
     applicationName: t.name,
@@ -61,6 +61,12 @@ export default async function TenantLayout({ children, params }: LayoutProps<"/[
       </header>
       <main className="safe-bottom flex-1">
         {children}
+        {!user ? (
+          <p className="mt-8 text-center text-xs text-muted">
+            ¿Administras la tienda?{" "}
+            <Link href={`/${t.slug}/login?como=tienda`} className="font-bold underline">Entra al panel</Link>
+          </p>
+        ) : null}
         <footer className="mt-10 flex items-center justify-center gap-1.5 px-4 pb-4 text-[14px] text-muted">
           Desarrollado por
           <a href="https://www.teolabs.app" target="_blank" rel="noopener noreferrer" className="transition-opacity hover:opacity-80">

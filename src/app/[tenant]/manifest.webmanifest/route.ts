@@ -15,6 +15,9 @@ export async function GET(_req: Request, ctx: RouteContext<"/[tenant]/manifest.w
       // Scope en la raíz para que también se pueda instalar desde la página de entrada
       scope: "/",
       display: "standalone",
+      // Un link a la tienda abre la app instalada (y la reutiliza si ya está abierta)
+      handle_links: "preferred",
+      launch_handler: { client_mode: ["navigate-existing", "auto"] },
       orientation: "portrait",
       background_color: t.theme.accent ?? "#fa95b3",
       theme_color: t.theme.accent ?? "#fa95b3",

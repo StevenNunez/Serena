@@ -2,6 +2,9 @@
 // No guarda páginas ni archivos en caché a propósito: la tienda siempre muestra lo último.
 self.addEventListener("install", () => self.skipWaiting());
 self.addEventListener("activate", (e) => e.waitUntil(self.clients.claim()));
+// Sin caché a propósito. Este handler vacío deja que el navegador la instale como app (y no como atajo
+// que abre el navegador); no intercepta nada: cada pedido sigue su camino normal.
+self.addEventListener("fetch", () => {});
 
 self.addEventListener("push", (event) => {
   let d = {};

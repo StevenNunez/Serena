@@ -1,5 +1,7 @@
-// Siembra la tienda Serena + un usuario demo con datos creíbles. Idempotente.
-// Uso:  node --env-file=.env.local scripts/seed.mjs
+// Siembra una tienda con piezas y una clienta demo con datos creíbles. Idempotente.
+// Uso:  node --env-file=.env.local scripts/seed.mjs [slug] [--vacia]
+//   slug     tienda a sembrar (por defecto "demo": la tienda de pruebas, que no sale en Google).
+//   --vacia  crea la tienda sin piezas (para una tienda real que la dueña va a llenar).
 // Requiere en .env.local: NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY,
 //   DEMO_EMAIL (clienta demo) y, opcional, OWNER_EMAIL (dueña, rol admin).
 import { createClient } from "@supabase/supabase-js";
@@ -9,6 +11,9 @@ if (!url || !key || !DEMO_EMAIL) {
   console.error("Faltan NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY o DEMO_EMAIL en .env.local");
   process.exit(1);
 }
+const slug = process.argv[2]?.startsWith("--") ? "demo" : (process.argv[2] ?? "demo");
+const vacia = process.argv.includes("--vacia");
+const esDemo = slug === "demo";
 const db = createClient(url, key, { auth: { persistSession: false } });
 
 async function must(label, q) {
@@ -31,14 +36,19 @@ const tenant = await must(
   "tenant",
   db.from("tenants").upsert(
     {
-      slug: "serena",
-      name: "Serena",
+      slug,
+      name: esDemo ? "Serena Demo" : "Serena",
       theme: { primary: "#c10b21", accent: "#fa95b3", logo: "/brand/serena-wordmark.png", tagline: "Moda & Accesorios" },
     },
     { onConflict: "slug" },
   ).select("id").single(),
 );
 const tid = tenant.id;
+if (esDemo) {
+  // Marca la tienda como demostración: sin buscadores ni sitemap
+  const { settings } = await must("settings", db.from("tenants").select("settings").eq("id", tid).single());
+  await must("demo-flag", db.from("tenants").update({ settings: { ...settings, demo: true } }).eq("id", tid));
+}
 
 // Medios de pago de la demo: transferencia activa; pasarelas se activan al cargar credenciales
 await must("bank", db.from("tenant_bank").upsert({
@@ -69,13 +79,13 @@ const pieces = [
   [7, "Blazer cuadros gris", "blazers", "L", "Gris", "Muy buen estado", 16990, "Estilo oficina, doble botón."],
   [8, "Vestido rojo cruzado", "vestidos", "M", "Rojo", "Como nuevo", 22990, "Cruzado en la cintura, tela fluida."],
 ];
-await must("products", db.from("products").upsert(
+if (!vacia) await must("products", db.from("products").upsert(
   pieces.map(([number, title, c, size, color, condition, price, description]) => ({
     tenant_id: tid, number, title, category_id: cat[c], size, color, condition, price, description, status: "available",
   })),
   { onConflict: "tenant_id,number", ignoreDuplicates: true },
 ));
-await must("counter", db.from("tenants").update({ next_product_number: pieces.length + 1 }).eq("id", tid).lt("next_product_number", pieces.length + 1));
+if (!vacia) await must("counter", db.from("tenants").update({ next_product_number: pieces.length + 1 }).eq("id", tid).lt("next_product_number", pieces.length + 1));
 
 // 4) Dueña (admin) y clienta demo
 if (OWNER_EMAIL) {
@@ -89,4 +99,4 @@ await must("demo", db.from("customers").upsert({
   address: { street: "Av. Providencia 1234", commune: "Providencia", region: "Región Metropolitana" },
 }));
 
-console.log(`Listo: tienda "serena" (${tid}), ${pieces.length} piezas, demo ${DEMO_EMAIL}`);
+console.log(`Listo: tienda "${slug}" (${tid}), ${vacia ? 0 : pieces.length} piezas, demo ${DEMO_EMAIL}`);
