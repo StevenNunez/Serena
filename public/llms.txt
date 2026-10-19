@@ -1,0 +1,7 @@
+# Serena · Moda & Accesorios
+
+Tienda en línea chilena de ropa y accesorios de piezas únicas: blazers, vestidos, chaquetas, camisas, blusas y disfraces.
+Cada prenda existe una sola vez (con su talla, color y estado). La clienta la reserva con «¡Es mía!», la pieza queda guardada para ella unos minutos y paga por transferencia bancaria.
+También se venden prendas en vivo por Instagram.
+Precios en pesos chilenos (CLP). Entrega por retiro en tienda, courier o despacho a domicilio.
+Desarrollado por Teo Labs: https://www.teolabs.app

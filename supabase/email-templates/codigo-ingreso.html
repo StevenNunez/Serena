@@ -1,0 +1,42 @@
+<!--
+  Plantilla del correo con el código de ingreso (Supabase › Authentication › Emails › Templates).
+  Se pega en DOS plantillas: «Confirm sign up» (primera vez) y «Magic Link» (clientas que ya existen).
+  Asunto sugerido:  Tu código para entrar a Serena
+  {{ .Token }} es el código que escribe la clienta en la pantalla de ingreso.
+-->
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Tu código para entrar a Serena</title></head>
+<body style="margin:0;padding:0;background:#fdeef3">
+<div style="display:none;max-height:0;overflow:hidden;opacity:0">Tu código es {{ .Token }}. Vence en pocos minutos.</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fdeef3">
+  <tr><td align="center" style="padding:28px 12px">
+    <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;font-family:Arial,Helvetica,sans-serif;color:#3b0a14">
+
+      <tr><td style="background:#3b0a14;border-radius:16px 16px 0 0;padding:20px 28px">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+          <td width="150" valign="middle"><img src="https://cdbhguilygjcsgaverws.supabase.co/storage/v1/object/public/products/12ba24bd-7e92-46c5-9d3a-4a21b9402a6e/brand/wordmark-white.png" width="140" alt="Serena" style="display:block;border:0;height:auto"></td>
+          <td valign="middle" style="padding-left:12px;font-size:15px;font-weight:bold;letter-spacing:3px;text-transform:uppercase;color:#ffffff">Serena</td>
+          <td align="right" valign="middle" style="font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:#d9aebb">Tienda en línea</td>
+        </tr></table>
+      </td></tr>
+      <tr><td style="background:#fa95b3;height:4px;line-height:4px;font-size:0">&nbsp;</td></tr>
+
+      <tr><td style="background:#ffffff;border-radius:0 0 16px 16px;padding:28px">
+        <div style="font-size:11px;font-weight:bold;letter-spacing:1.6px;text-transform:uppercase;color:#c10b21">Ingreso</div>
+        <div style="margin-top:6px;font-size:26px;line-height:1.2;font-weight:bold">Tu código para entrar</div>
+        <p style="margin:18px 0 0;font-size:15px;line-height:1.6">Escríbelo en la pantalla de ingreso de Serena para entrar a tu cuenta:</p>
+        <table role="presentation" cellpadding="0" cellspacing="0" style="margin:18px 0"><tr>
+          <td style="background:#fff6f9;border:1px solid #f4c9d6;border-radius:12px;padding:16px 28px;font-size:34px;font-weight:bold;letter-spacing:8px;color:#3b0a14">{{ .Token }}</td>
+        </tr></table>
+        <p style="margin:0;font-size:13px;line-height:1.6;color:#8a5a66">El código vence en pocos minutos. Si no fuiste tú quien pidió entrar, ignora este correo: nadie puede entrar sin él.</p>
+      </td></tr>
+
+      <tr><td align="center" style="padding:22px 12px 8px;font-size:11px;color:#a68994">
+        Enviado desde Serena<br>Desarrollado por <a href="https://www.teolabs.app" target="_blank" rel="noopener noreferrer" style="text-decoration:none;font-weight:bold"><span style="color:#2563eb">T</span><span style="color:#4f5ced">e</span><span style="color:#7c59f1">o</span> <span style="color:#a855f7">L</span><span style="color:#7a7ee9">a</span><span style="color:#4dab9a">b</span><span style="color:#22c55e">s</span></a> &reg;
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>
