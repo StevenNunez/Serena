@@ -46,3 +46,6 @@ AGENTS.md
 CLAUDE.md
 .claude/
 PLAN.md
+
+# scripts de desarrollo (siembra de demo, códigos de acceso)
+scripts/
